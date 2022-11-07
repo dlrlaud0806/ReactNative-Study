@@ -8,4 +8,6 @@ expo init my-project
 
 expo login
 
+expo install expo-location
+
 npm start
