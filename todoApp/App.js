@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesome } from "@expo/vector-icons";
 import { theme } from "./colors";
 
 const STORAGE_KEY = "@toDos";
@@ -42,6 +43,12 @@ export default function App() {
     setToDos(newToDos);
     await saveToDos(newToDos);
     setText("");
+  };
+  const deleteToDo = async (key) => {
+    const newToDos = { ...toDos };
+    delete newToDos[key];
+    setToDos(newToDos);
+    await saveToDos(newToDos);
   };
   return (
     <View style={styles.container}>
@@ -80,6 +87,9 @@ export default function App() {
           toDos[key].working === working ? (
             <View style={styles.toDo} key={key}>
               <Text style={styles.toDoText}>{toDos[key].text}</Text>
+              <TouchableOpacity onPress={() => deleteToDo(key)}>
+                <FontAwesome name="trash-o" size={24} color="white" />
+              </TouchableOpacity>
             </View>
           ) : null
         )}
@@ -117,6 +127,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   toDoText: {
     color: "white",
