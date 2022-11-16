@@ -10,4 +10,7 @@ expo login
 
 expo install expo-location
 
+#for todoApp
+expo install @react-native-async-storage/async-storage
+
 npm start
