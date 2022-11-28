@@ -9,10 +9,10 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FontAwesome, Feather } from "@expo/vector-icons";
 
 import { theme } from "../../theme/colors";
 import Header from "./Header";
+import TodoList from "./TodoList";
 
 const STORAGE_KEY = "@toDos";
 
@@ -48,24 +48,24 @@ export default function Todo() {
     await saveToDos(newToDos);
     setText("");
   };
-  const deleteConfirm = (key) =>
-    Alert.alert("삭제 확인", "삭제하시겠습니까?", [
-      {
-        text: "취소",
-        onPress: () => Alert.alert("취소되었습니다."),
-        style: "cancel",
-      },
-      { text: "삭제", onPress: () => deleteToDo(key) },
-    ]);
+  // const deleteConfirm = (key) =>
+  //   Alert.alert("삭제 확인", "삭제하시겠습니까?", [
+  //     {
+  //       text: "취소",
+  //       onPress: () => Alert.alert("취소되었습니다."),
+  //       style: "cancel",
+  //     },
+  //     { text: "삭제", onPress: () => deleteToDo(key) },
+  //   ]);
 
-  const deleteToDo = async (key) => {
-    const newToDos = { ...toDos };
+  // const deleteToDo = async (key) => {
+  //   const newToDos = { ...toDos };
 
-    delete newToDos[key];
-    setToDos(newToDos);
-    await saveToDos(newToDos);
-    Alert.alert("삭제되었습니다.");
-  };
+  //   delete newToDos[key];
+  //   setToDos(newToDos);
+  //   await saveToDos(newToDos);
+  //   Alert.alert("삭제되었습니다.");
+  // };
 
   return (
     <View style={styles.container}>
@@ -81,20 +81,12 @@ export default function Todo() {
         }
         style={styles.input}
       />
-
-      <ScrollView>
-        {Object.keys(toDos).map((key) =>
-          toDos[key].working === working ? (
-            <View style={styles.toDo} key={key}>
-              <Feather name="list" size={24} color="white" />
-              <Text style={styles.toDoText}>{toDos[key].text}</Text>
-              <TouchableOpacity onPress={() => deleteConfirm(key)}>
-                <FontAwesome name="trash-o" size={24} color="white" />
-              </TouchableOpacity>
-            </View>
-          ) : null
-        )}
-      </ScrollView>
+      <TodoList
+        toDos={toDos}
+        working={working}
+        setToDos={setToDos}
+        saveToDos={saveToDos}
+      />
     </View>
   );
 }
@@ -121,24 +113,5 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginVertical: 20,
     fontSize: 18,
-  },
-  toDo: {
-    backgroundColor: theme.toDoBg,
-    marginBottom: 10,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderRadius: 15,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  toDoText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-    maxWidth: "80%",
-    paddingHorizontal: 20,
-    marginLeft: 15,
-    marginRight: "auto",
   },
 });
