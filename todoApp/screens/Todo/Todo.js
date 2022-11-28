@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Feather } from "@expo/vector-icons";
 
 import { theme } from "../../theme/colors";
 import Header from "./Header";
@@ -81,10 +81,12 @@ export default function Todo() {
         }
         style={styles.input}
       />
+
       <ScrollView>
         {Object.keys(toDos).map((key) =>
           toDos[key].working === working ? (
             <View style={styles.toDo} key={key}>
+              <Feather name="list" size={24} color="white" />
               <Text style={styles.toDoText}>{toDos[key].text}</Text>
               <TouchableOpacity onPress={() => deleteConfirm(key)}>
                 <FontAwesome name="trash-o" size={24} color="white" />
@@ -128,10 +130,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   toDoText: {
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+    maxWidth: "80%",
+    paddingHorizontal: 20,
+    marginLeft: 15,
+    marginRight: "auto",
   },
 });

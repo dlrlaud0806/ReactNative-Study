@@ -23,7 +23,11 @@ export default function MyCalendar() {
     <View style={styles.container}>
       {/* <Text>Calendar Module Example</Text>
       <Button title="Create a new calendar" onPress={createCalendar} /> */}
-      <Calendar />
+      <Calendar
+        onDayPress={(day) => {
+          console.log("selected day", day);
+        }}
+      />
     </View>
   );
 }
