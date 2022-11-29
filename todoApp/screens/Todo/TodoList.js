@@ -20,7 +20,18 @@ export default function TodoList({
   saveToDos,
   loadToDos,
 }) {
-  useEffect(() => {}, [toDos]);
+  useEffect(() => {
+    console.log("TodoList : ", toDos);
+  }, [toDos]);
+  useEffect(() => {
+    console.log("TodoList : ", working);
+    loadToDos();
+    setToDos(
+      toDos.filter(function (data) {
+        return data.working == working;
+      })
+    );
+  }, [working]);
 
   // console.log("dataarr : ", data);
 
@@ -38,7 +49,7 @@ export default function TodoList({
     const newToDos = toDos.filter(function (data) {
       return data.key != key;
     });
-
+    console.log("deleted : ", newToDos);
     setToDos(newToDos);
     await saveToDos(newToDos);
     Alert.alert("삭제되었습니다.");

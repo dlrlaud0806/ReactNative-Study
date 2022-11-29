@@ -22,18 +22,24 @@ export default function Todo() {
   const [toDos, setToDos] = useState([]);
   useEffect(() => {
     loadToDos();
+    console.log("Todo : ", toDos);
   }, []);
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
 
   const saveToDos = async (toSave) => {
-    console.log("save : ", toSave);
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    if (Object.keys(toSave).includes("data")) {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave.data));
+      console.log("save : ", toSave.data);
+    } else {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      console.log("save : ", toSave);
+    }
   };
   const loadToDos = async () => {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
-    s !== null ? setToDos(JSON.parse(s).data) : null;
+    s !== null ? setToDos(JSON.parse(s)) : null;
     console.log("loaded", JSON.parse(s));
   };
 
@@ -66,24 +72,6 @@ export default function Todo() {
     await saveToDos(newToDos);
     setText("");
   };
-  // const deleteConfirm = (key) =>
-  //   Alert.alert("삭제 확인", "삭제하시겠습니까?", [
-  //     {
-  //       text: "취소",
-  //       onPress: () => Alert.alert("취소되었습니다."),
-  //       style: "cancel",
-  //     },
-  //     { text: "삭제", onPress: () => deleteToDo(key) },
-  //   ]);
-
-  // const deleteToDo = async (key) => {
-  //   const newToDos = { ...toDos };
-
-  //   delete newToDos[key];
-  //   setToDos(newToDos);
-  //   await saveToDos(newToDos);
-  //   Alert.alert("삭제되었습니다.");
-  // };
 
   return (
     <View style={styles.container}>
