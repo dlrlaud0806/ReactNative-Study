@@ -19,7 +19,7 @@ const STORAGE_KEY = "@toDos";
 export default function Todo() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
-  const [toDos, setToDos] = useState({});
+  const [toDos, setToDos] = useState([]);
   useEffect(() => {
     loadToDos();
   }, []);
@@ -28,23 +28,41 @@ export default function Todo() {
   const onChangeText = (payload) => setText(payload);
 
   const saveToDos = async (toSave) => {
+    console.log("save : ", toSave);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
   };
   const loadToDos = async () => {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
-    s !== null ? setToDos(JSON.parse(s)) : null;
-    console.log(toDos);
+    s !== null ? setToDos(JSON.parse(s).data) : null;
+    console.log("loaded", JSON.parse(s));
   };
 
   const addToDo = async () => {
     if (text === "") {
       return;
     }
-    const newToDos = {
+    console.log(toDos);
+    const newToDos = [
       ...toDos,
-      [Date.now()]: { text, working },
-    };
-    setToDos(newToDos);
+      {
+        key: Date.now(),
+        text: text,
+        working: working,
+      },
+    ];
+    console.log("new : ", newToDos);
+    if (toDos.length == 0) {
+      setToDos([
+        {
+          key: Date.now(),
+          text: text,
+          working: working,
+        },
+      ]);
+    } else {
+      setToDos(newToDos);
+    }
+    console.log("newset : ", toDos);
     await saveToDos(newToDos);
     setText("");
   };
@@ -86,6 +104,7 @@ export default function Todo() {
         working={working}
         setToDos={setToDos}
         saveToDos={saveToDos}
+        loadToDos={loadToDos}
       />
     </View>
   );

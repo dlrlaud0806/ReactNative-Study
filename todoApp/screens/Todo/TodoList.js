@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,12 +8,22 @@ import {
   Alert,
 } from "react-native";
 import { FontAwesome, Feather } from "@expo/vector-icons";
-
+import DraggableFlatList from "react-native-draggable-flatlist";
 import { theme } from "../../theme/colors";
 
 const STORAGE_KEY = "@toDos";
 
-export default function TodoList({ toDos, working, setToDos, saveToDos }) {
+export default function TodoList({
+  toDos,
+  working,
+  setToDos,
+  saveToDos,
+  loadToDos,
+}) {
+  useEffect(() => {}, [toDos]);
+
+  // console.log("dataarr : ", data);
+
   const deleteConfirm = (key) =>
     Alert.alert("삭제 확인", "삭제하시겠습니까?", [
       {
@@ -25,27 +35,46 @@ export default function TodoList({ toDos, working, setToDos, saveToDos }) {
     ]);
 
   const deleteToDo = async (key) => {
-    const newToDos = { ...toDos };
+    const newToDos = toDos.filter(function (data) {
+      return data.key != key;
+    });
 
-    delete newToDos[key];
     setToDos(newToDos);
     await saveToDos(newToDos);
     Alert.alert("삭제되었습니다.");
   };
+
+  const renderItem = ({ item, index, move, moveEnd, isActive }) => {
+    return (
+      <View style={styles.toDo} key={item.key}>
+        <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
+          <Feather
+            name="list"
+            size={24}
+            color="white"
+            backgroundColor="white"
+            maxWidth="10%"
+          />
+        </TouchableOpacity>
+        <Text style={styles.toDoText}>{item.text}</Text>
+        <TouchableOpacity onPress={() => deleteConfirm(item.key)}>
+          <FontAwesome name="trash-o" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
   return (
-    <ScrollView>
-      {Object.keys(toDos).map((key) =>
-        toDos[key].working === working ? (
-          <View style={styles.toDo} key={key}>
-            <Feather name="list" size={24} color="white" />
-            <Text style={styles.toDoText}>{toDos[key].text}</Text>
-            <TouchableOpacity onPress={() => deleteConfirm(key)}>
-              <FontAwesome name="trash-o" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-        ) : null
-      )}
-    </ScrollView>
+    <DraggableFlatList
+      data={toDos}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.key}
+      onMoveEnd={({ data }) => {
+        console.log("end", data);
+        setToDos({ data });
+        saveToDos({ data });
+        loadToDos({ data });
+      }}
+    />
   );
 }
 
