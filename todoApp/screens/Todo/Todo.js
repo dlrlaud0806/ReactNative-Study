@@ -19,12 +19,13 @@ const STORAGE_KEY = "@toDos";
 export default function Todo() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
-  const [toDos, setToDos] = useState([]);
+  const [toDos, setToDos] = useState({ work: [], personal: [] });
+
   useEffect(() => {
     loadToDos();
-    console.log("Todo : ", toDos);
-  }, []);
-  const travel = () => setWorking(false);
+  }, [working]);
+
+  const personal = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
 
@@ -40,48 +41,45 @@ export default function Todo() {
   const loadToDos = async () => {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
     s !== null ? setToDos(JSON.parse(s)) : null;
-    console.log("loaded", JSON.parse(s));
+    console.log("load : ", JSON.parse(s));
+    await AsyncStorage.clear();
   };
 
   const addToDo = async () => {
     if (text === "") {
       return;
     }
-    console.log(toDos);
-    const newToDos = [
-      ...toDos,
-      {
+    console.log("add :", toDos);
+    if (working) {
+      const newToDos = toDos;
+      newToDos.work.push({
         key: Date.now(),
         text: text,
         working: working,
-      },
-    ];
-    console.log("new : ", newToDos);
-    if (toDos.length == 0) {
-      setToDos([
-        {
-          key: Date.now(),
-          text: text,
-          working: working,
-        },
-      ]);
+      });
+      setToDos(newToDos);
     } else {
+      const newToDos = toDos;
+      newToDos.personal.push({
+        key: Date.now(),
+        text: text,
+        working: working,
+      });
       setToDos(newToDos);
     }
     console.log("newset : ", toDos);
-    await saveToDos(newToDos);
+    saveToDos(toDos);
     setText("");
   };
 
   return (
     <View style={styles.container}>
-      <Header work={work} travel={travel} working={working} />
+      <Header work={work} personal={personal} working={working} />
       <TextInput
         onSubmitEditing={addToDo}
         onChangeText={onChangeText}
         returnKeyType="done"
         value={text}
-        keyboardAppearance="dark"
         placeholder={
           working ? "What do you have to do?" : "Where do you want to go?"
         }

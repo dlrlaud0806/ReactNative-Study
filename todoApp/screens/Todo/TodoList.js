@@ -21,16 +21,12 @@ export default function TodoList({
   loadToDos,
 }) {
   useEffect(() => {
-    console.log("TodoList : ", toDos);
+    console.log("TodoList toDos: ", toDos);
+    console.log(toDos.work);
   }, [toDos]);
   useEffect(() => {
-    console.log("TodoList : ", working);
+    console.log("TodoList working: ", working);
     loadToDos();
-    setToDos(
-      toDos.filter(function (data) {
-        return data.working == working;
-      })
-    );
   }, [working]);
 
   // console.log("dataarr : ", data);
@@ -46,12 +42,21 @@ export default function TodoList({
     ]);
 
   const deleteToDo = async (key) => {
-    const newToDos = toDos.filter(function (data) {
-      return data.key != key;
-    });
-    console.log("deleted : ", newToDos);
-    setToDos(newToDos);
-    await saveToDos(newToDos);
+    let temptoDos = {};
+    if (working) {
+      const newToDos = toDos.work.filter(function (data) {
+        return data.key != key;
+      });
+      temptoDos = { work: newToDos, personal: toDos.personal };
+      setToDos(temptoDos);
+    } else {
+      const newToDos = toDos.personal.filter(function (data) {
+        return data.key != key;
+      });
+      temptoDos = { work: toDos.work, personal: newToDos };
+      setToDos(temptoDos);
+    }
+    await saveToDos(temptoDos);
     Alert.alert("삭제되었습니다.");
   };
 
@@ -74,16 +79,20 @@ export default function TodoList({
       </View>
     );
   };
+
   return (
     <DraggableFlatList
-      data={toDos}
+      data={working ? toDos.work : toDos.personal}
       renderItem={renderItem}
       keyExtractor={(item) => item.key}
       onMoveEnd={({ data }) => {
         console.log("end", data);
-        setToDos({ data });
-        saveToDos({ data });
-        loadToDos({ data });
+        tempdata = working
+          ? { work: data, personal: toDos.personal }
+          : { work: toDos.work, personal: data };
+        setToDos({ tempdata });
+        saveToDos(tempdata);
+        loadToDos();
       }}
     />
   );

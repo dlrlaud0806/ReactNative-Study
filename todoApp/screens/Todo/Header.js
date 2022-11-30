@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import { theme } from "../../theme/colors";
 
-export default function Header({ work, travel, working }) {
+export default function Header({ work, personal, working }) {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={work}>
@@ -13,7 +13,7 @@ export default function Header({ work, travel, working }) {
           Work
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={travel}>
+      <TouchableOpacity onPress={personal}>
         <Text
           style={{
             ...styles.btnText,
