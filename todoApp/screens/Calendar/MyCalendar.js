@@ -3,6 +3,7 @@ import { View, Text, Button, Platform, StyleSheet } from "react-native";
 // import * as Calendar from "expo-calendar";
 import { theme } from "../../theme/colors";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
+import Header from "./Header";
 
 // format
 // {
@@ -21,20 +22,17 @@ import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 export default function MyCalendar() {
   return (
     <View style={styles.container}>
+      <Header />
       {/* <Text>Calendar Module Example</Text>
       <Button title="Create a new calendar" onPress={createCalendar} /> */}
-      <Calendar
-        onDayPress={(day) => {
-          console.log("selected day", day);
-        }}
-      />
+      <Agenda />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
+    marginTop: 30,
     flex: 1,
     backgroundColor: theme.bg,
     paddingHorizontal: 20,

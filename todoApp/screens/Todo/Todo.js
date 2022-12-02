@@ -42,7 +42,7 @@ export default function Todo() {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
     s !== null ? setToDos(JSON.parse(s)) : null;
     console.log("load : ", JSON.parse(s));
-    await AsyncStorage.clear();
+    // await AsyncStorage.clear();
   };
 
   const addToDo = async () => {
