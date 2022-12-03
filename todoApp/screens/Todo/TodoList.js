@@ -21,11 +21,11 @@ export default function TodoList({
   loadToDos,
 }) {
   useEffect(() => {
-    console.log("TodoList toDos: ", toDos);
-    console.log(toDos.work);
+    // console.log("TodoList toDos: ", toDos);
+    // console.log(toDos.work);
   }, [toDos]);
   useEffect(() => {
-    console.log("TodoList working: ", working);
+    // console.log("TodoList working: ", working);
     loadToDos();
   }, [working]);
 
@@ -86,7 +86,7 @@ export default function TodoList({
       renderItem={renderItem}
       keyExtractor={(item) => item.key}
       onMoveEnd={({ data }) => {
-        console.log("end", data);
+        // console.log("end", data);
         tempdata = working
           ? { work: data, personal: toDos.personal }
           : { work: toDos.work, personal: data };

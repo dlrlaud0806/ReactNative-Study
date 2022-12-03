@@ -32,16 +32,16 @@ export default function Todo() {
   const saveToDos = async (toSave) => {
     if (Object.keys(toSave).includes("data")) {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave.data));
-      console.log("save : ", toSave.data);
+      // console.log("save : ", toSave.data);
     } else {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-      console.log("save : ", toSave);
+      // console.log("save : ", toSave);
     }
   };
   const loadToDos = async () => {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
     s !== null ? setToDos(JSON.parse(s)) : null;
-    console.log("load : ", JSON.parse(s));
+    // console.log("load : ", JSON.parse(s));
     // await AsyncStorage.clear();
   };
 
@@ -49,7 +49,7 @@ export default function Todo() {
     if (text === "") {
       return;
     }
-    console.log("add :", toDos);
+    // console.log("add :", toDos);
     if (working) {
       const newToDos = toDos;
       newToDos.work.push({
@@ -67,7 +67,7 @@ export default function Todo() {
       });
       setToDos(newToDos);
     }
-    console.log("newset : ", toDos);
+    // console.log("newset : ", toDos);
     saveToDos(toDos);
     setText("");
   };
